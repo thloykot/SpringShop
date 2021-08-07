@@ -1,60 +1,32 @@
 package com.thl.spring.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
+
+@Data
+@RequiredArgsConstructor()@NoArgsConstructor
+@ToString
 @Entity()
 @Table(name = "sneakers")
 public class Sneakers implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name = "firm")
+    @NonNull
+    @Column(name = "firm", nullable = false)
     private String firm;
 
-    @Column(name = "size")
+    @NonNull
+    @Column(name = "size", nullable = false)
     private int size;
 
-    @Column(name = "price")
+    @NonNull
+    @Column(name = "price", nullable = false)
     private int price;
-
-    public Sneakers() {
-
-    }
-
-    public Sneakers(String firm, int size, int price) {
-        this.firm = firm;
-        this.size = size;
-        this.price = price;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getFirm() {
-        return firm;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    @Override
-    public String toString() {
-        return "Sneakers{" +
-                "id=" + id +
-                ", firm='" + firm + '\'' +
-                ", size=" + size +
-                ", price=" + price +
-                '}';
-    }
 }
