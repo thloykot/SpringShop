@@ -62553,11 +62553,13 @@ false Zulu
     </sequence>
     <table id="5142" parent="19" name="sneakers">
       <ObjectId>490244</ObjectId>
+      <Outdated>1</Outdated>
       <Owner>postgres</Owner>
       <StateNumber>157248</StateNumber>
     </table>
     <table id="5143" parent="19" name="users">
       <ObjectId>490249</ObjectId>
+      <Outdated>1</Outdated>
       <Owner>postgres</Owner>
       <StateNumber>157251</StateNumber>
     </table>
