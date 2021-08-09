@@ -11,8 +11,10 @@
 <div th:if="${param.logout}">
     You have been logged out.
 </div>
+<div th:if="${existedUsername != null}" class="alert alert-danger notification" role="alert">
+    <p>Name already exists</p>
+</div>
 <form th:action="@{/registration}" method="post">
-    <p th:text="${model}"/>
     <div><label> User Name : <input type="text" name="username"/> </label></div>
     <div><label> Password: <input type="password" name="password"/> </label></div>
     <div><input type="submit" value="Register"/></div>
