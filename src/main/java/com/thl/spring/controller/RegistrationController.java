@@ -36,8 +36,6 @@ public class RegistrationController {
             model.addAttribute("existedUsername", model);
             return "registration";
         }
-        user.setActive(true);
-        user.setUserRole(Collections.singleton(Role.USER));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
         return "redirect:/login";
