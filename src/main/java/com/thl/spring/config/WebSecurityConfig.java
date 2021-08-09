@@ -1,5 +1,6 @@
 package com.thl.spring.config;
 
+import com.thl.spring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,6 +16,7 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final DataSource dataSource;
 
@@ -22,14 +24,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/registration").permitAll()
+                .antMatchers("/", "/registration")
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .and()
-                .logout()
                 .permitAll();
     }
 
@@ -40,8 +39,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder)
                 .usersByUsernameQuery("select username,password,active from users where username=?")
                 .authoritiesByUsernameQuery("select u.username, ur.user_role from users u inner join usr_role ur on u.id = ur.user_id where u.username=?");
-
-
     }
 }
 

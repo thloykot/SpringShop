@@ -3,7 +3,9 @@ package com.thl.spring.controller;
 import com.thl.spring.dao.UserDao;
 import com.thl.spring.model.Role;
 import com.thl.spring.model.User;
+import com.thl.spring.service.UserService;
 import lombok.RequiredArgsConstructor;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +21,7 @@ import java.util.Optional;
 public class RegistrationController {
 
     private final PasswordEncoder passwordEncoder;
-    private final UserDao userDao;
+    private final UserService userService;
 
     @GetMapping("/registration")
     public String registration() {
@@ -28,7 +30,7 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(@ModelAttribute User user, Model model) {
-        Optional<User> userFromBD = userDao.findByUsername(user.getUsername());
+        Optional<User> userFromBD = userService.findByUsername(user.getUsername());
 
         if (userFromBD.isPresent()) {
             model.addAttribute("existedUsername", model);
@@ -37,7 +39,7 @@ public class RegistrationController {
         user.setActive(true);
         user.setUserRole(Collections.singleton(Role.USER));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userDao.save(user);
+        userService.saveUser(user);
         return "redirect:/login";
     }
 }

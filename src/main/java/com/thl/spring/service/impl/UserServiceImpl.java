@@ -19,8 +19,8 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
     @Override
-    public Optional<User> findByUserName(String login) {
-        log.info("");
+    public Optional<User> findByUsername(String login) {
+        log.info("Finding user by username");
         return userDao.findByUsername(login);
     }
 

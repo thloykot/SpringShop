@@ -8,26 +8,24 @@ import java.io.Serializable;
 
 
 @Data
-@RequiredArgsConstructor()
 @NoArgsConstructor
-@ToString
 @Entity()
-@Table(name = "sneakers")
+@Table()
 public class Sneakers implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @NonNull
-    @Column(name = "firm", nullable = false)
     private String firm;
 
-    @NonNull
-    @Column(name = "size", nullable = false)
     private int size;
 
-    @NonNull
-    @Column(name = "price", nullable = false)
     private int price;
+
+    public Sneakers(String firm, int size, int price) {
+        this.firm = firm;
+        this.size = size;
+        this.price = price;
+    }
 }

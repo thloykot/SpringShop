@@ -1,17 +1,18 @@
 package com.thl.spring.service;
 
 import com.thl.spring.model.Sneakers;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface SneakersService {
 
-    void save(Sneakers sneakers);
+    ResponseEntity<Sneakers> save(Sneakers sneakers);
 
-    Sneakers findById(int id);
+    ResponseEntity<Sneakers> findById(int id);
 
-    List<Sneakers> findByName(String firm);
+    ResponseEntity<List<Sneakers>> findByFirm(String firm);
 
-    void delete(int id);
+    ResponseEntity<?> delete(int id);
 
 }

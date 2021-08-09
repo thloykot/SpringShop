@@ -5,6 +5,7 @@ import com.thl.spring.model.Sneakers;
 import com.thl.spring.service.SneakersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,27 +21,28 @@ public class SneakersServiceImpl implements SneakersService {
     private final SneakersDao sneakersDao;
 
     @Override
-    public void save(Sneakers sneakers) {
+    public ResponseEntity<Sneakers> save(Sneakers sneakers) {
         log.info("Saving new sneakers {}", sneakers.getFirm());
-        sneakersDao.save(sneakers);
+        return ResponseEntity.ok().body(sneakersDao.save(sneakers));
     }
 
     @Override
-    public Sneakers findById(int id) {
+    public ResponseEntity<Sneakers> findById(int id) {
         log.info("Finding sneakers by id:{}", id);
-        return sneakersDao.findById(id).get();
+        return ResponseEntity.ok().body(sneakersDao.findById(id).get());
     }
 
     @Override
-    public List<Sneakers> findByName(String firm) {
+    public ResponseEntity<List<Sneakers>> findByFirm(String firm) {
         List<Sneakers> sneakersList = sneakersDao.findSneakersByFirm(firm);
         log.info("{} sneakers of firm {} found", sneakersList.size(), firm);
-        return sneakersList;
+        return ResponseEntity.ok().body(sneakersList);
     }
 
     @Override
-    public void delete(int id) {
+    public ResponseEntity<?> delete(int id) {
         log.info("Deleting sneakers with id:{}", id);
         sneakersDao.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }
