@@ -8,13 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 
 @Service
-@Transactional
-@RequiredArgsConstructor()
+@RequiredArgsConstructor
 @Slf4j
 public class SneakersServiceImpl implements SneakersService {
 

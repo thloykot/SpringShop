@@ -1,7 +1,7 @@
 package com.thl.spring.config;
 
 import com.thl.spring.service.UserService;
-import com.thl.spring.service.impl.UserServiceImpl;
+import com.thl.spring.service.impl.LoginUserServise;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,20 +12,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.sql.DataSource;
-
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+
+
+    @Bean
+    public LoginUserServise loginUserServise() {
+        return new LoginUserServise(userService);
+    }
 
     @Bean
     public DaoAuthenticationProvider authProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userService);
+        authProvider.setUserDetailsService(loginUserServise());
         authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
@@ -43,10 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(authProvider());
-                //.usersByUsernameQuery("select username,password,active from users where username=?")
-                //.authoritiesByUsernameQuery("select u.username, ur.user_role from users u inner join usr_role ur on u.id = ur.user_id where u.username=?");
+
     }
 }
 

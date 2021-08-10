@@ -1,16 +1,16 @@
 package com.thl.spring.model;
 
-
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-
+@RequiredArgsConstructor
 @Data
-@NoArgsConstructor
-@Entity()
-@Table()
+@Entity
+@Table
 public class Sneakers implements Serializable {
 
     @Id

@@ -1,11 +1,8 @@
 package com.thl.spring.model;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,8 +11,7 @@ import java.util.Collection;
 
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
