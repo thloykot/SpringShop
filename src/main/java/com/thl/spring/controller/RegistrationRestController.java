@@ -4,29 +4,34 @@ import com.thl.spring.model.User;
 import com.thl.spring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestController
 public class RegistrationRestController {
 
-    private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
 
     @PostMapping("/registration")
-    public void addUser(User user) throws Exception {
-        Optional<User> userFromBD = userService.findByUsername(user.getUsername());
+    public ResponseEntity<User> addUser(@RequestBody User user) throws Exception {
 
-        if (userFromBD.isPresent()) {
-            throw new Exception("User exists");
+        if (userService.isExists(user.getUsername())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.saveUser(user);
+        userService.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/getUser/{username}")
+    public ResponseEntity<User> getUser(@PathVariable("username") String username) {
+
+        if (!userService.isExists(username)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userService.get(username));
     }
 }

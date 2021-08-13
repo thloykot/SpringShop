@@ -9,9 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
-
-@Data
 @RequiredArgsConstructor
+@Data
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
@@ -27,4 +26,7 @@ public class User implements Serializable {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
+    public org.springframework.security.core.userdetails.User toLoginUser() {
+        return new org.springframework.security.core.userdetails.User(username, password, roles);
+    }
 }

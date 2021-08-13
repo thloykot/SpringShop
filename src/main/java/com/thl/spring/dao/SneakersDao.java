@@ -9,6 +9,12 @@ import java.util.List;
 
 @Repository
 public interface SneakersDao extends JpaRepository<Sneakers, Integer> {
-    //Jpa is updated CRUD
+
     List<Sneakers> findSneakersByFirm(String firm);
+
+    boolean existsByFirmAndAndSizeAndPrice(String firm, int size, int price);
+
+    boolean existsById(int id);
+
+    boolean existsByFirm(String firm);
 }

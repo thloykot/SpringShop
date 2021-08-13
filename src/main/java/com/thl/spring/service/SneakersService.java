@@ -1,18 +1,24 @@
 package com.thl.spring.service;
 
 import com.thl.spring.model.Sneakers;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SneakersService {
 
-    ResponseEntity<Sneakers> save(Sneakers sneakers);
+    Sneakers save(Sneakers sneakers);
 
-    ResponseEntity<Sneakers> findById(int id);
+    Optional<Sneakers> findById(int id);
 
-    ResponseEntity<List<Sneakers>> findByFirm(String firm);
+    List<Sneakers> findByFirm(String firm);
 
-    ResponseEntity<?> delete(int id);
+    boolean isExists(Sneakers sneakers);
+
+    boolean isExistsById(int id);
+
+    boolean isExistsByFirm(String firm);
+
+    void delete(int id);
 
 }
