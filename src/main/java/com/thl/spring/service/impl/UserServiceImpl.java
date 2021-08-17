@@ -1,7 +1,8 @@
 package com.thl.spring.service.impl;
 
 import com.thl.spring.dao.UserDao;
-import com.thl.spring.model.User;
+import com.thl.spring.dto.UserDto;
+import com.thl.spring.model.UserEntity;
 import com.thl.spring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,33 +19,38 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public Optional<User> findByUsername(String username) {
-        log.info("Finding user by username");
 
+    @Override
+    public void save(UserDto userDto) {
+        Optional<UserEntity> userEntityOptional = userDao.findByUsername(userDto.getUsername());
+        if (userEntityOptional.isPresent()) {
+            log.info("Updating user");
+            userDao.save(updateUser(userEntityOptional.get(), userDto));
+        } else {
+            UserEntity userEntity = toEntity(userDto);
+            log.info("Saving user");
+            userDao.save(userEntity);
+        }
+    }
+
+    @Override
+    public Optional<UserEntity> findByUsername(String username) {
         return userDao.findByUsername(username);
     }
 
-    @Override
-    public User save(User user) throws Exception {
-        Optional<User> userFromDB = userDao.findByUsername(user.getUsername());
-
-        if (userFromDB.isPresent()) {
-            throw new Exception("User exists");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        log.info("saving user №{}", user.getId());
-        return userDao.save(user);
+    private UserEntity toEntity(UserDto userDto) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername(userDto.getUsername());
+        userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        userEntity.setRole(userDto.getRole());
+        return userEntity;
     }
 
-    @Override
-    public User get(String username) {
-        return userDao.getByUsername(username);
-    }
-
-    @Override
-    public boolean isExists(String username) {
-        return userDao.existsByUsername(username);
+    private UserEntity updateUser(UserEntity userEntity, UserDto userDto) {
+        userEntity.setRole(userDto.getRole());
+        userEntity.setUsername(userDto.getUsername());
+        userEntity.setPassword(userDto.getPassword());
+        return userEntity;
     }
 
 }

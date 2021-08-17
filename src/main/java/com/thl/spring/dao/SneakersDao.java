@@ -6,15 +6,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SneakersDao extends JpaRepository<Sneakers, Integer> {
 
     List<Sneakers> findSneakersByFirm(String firm);
 
-    boolean existsByFirmAndAndSizeAndPrice(String firm, int size, int price);
+    Optional<Sneakers> findByFirmAndAndSizeAndPrice(String firm, int size, int price);
 
-    boolean existsById(int id);
+    int deleteSneakersById(Integer id);
 
-    boolean existsByFirm(String firm);
 }

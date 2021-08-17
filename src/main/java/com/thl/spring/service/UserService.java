@@ -1,16 +1,14 @@
 package com.thl.spring.service;
 
-import com.thl.spring.model.User;
+import com.thl.spring.dto.UserDto;
+import com.thl.spring.model.UserEntity;
 
 import java.util.Optional;
 
 public interface UserService {
-    Optional<User> findByUsername(String username);
 
-    User save(User user) throws Exception;
+    void save(UserDto userDto);
 
-    User get(String username);
-
-    boolean isExists(String username);
+    Optional<UserEntity> findByUsername(String username);
 
 }
