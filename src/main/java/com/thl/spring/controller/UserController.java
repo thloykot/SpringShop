@@ -16,9 +16,8 @@ public class UserController {
 
 
     @PutMapping("/register")
-    public ResponseEntity<Void> addUser(@RequestBody UserDto userDto) {
-        userService.save(userDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Integer> saveUser(@RequestBody UserDto userDto) {
+        return ResponseEntity.ok(userService.save(userDto));
     }
 
     @GetMapping("/user/{username}")

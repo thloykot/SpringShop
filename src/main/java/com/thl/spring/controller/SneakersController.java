@@ -1,11 +1,9 @@
 package com.thl.spring.controller;
 
 
-import com.thl.spring.dto.SneakersDto;
 import com.thl.spring.model.Sneakers;
 import com.thl.spring.service.SneakersService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +17,8 @@ public class SneakersController {
     private final SneakersService sneakersService;
 
     @PutMapping()
-    public ResponseEntity<Integer> save(@RequestBody SneakersDto sneakersDto) {
-        sneakersService.save(sneakersDto);
-        return ResponseEntity.ok().build();
-
+    public ResponseEntity<Integer> save(@RequestBody Sneakers sneakers) {
+        return ResponseEntity.ok(sneakersService.save(sneakers));
     }
 
     @GetMapping("/{id}")

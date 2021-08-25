@@ -1,7 +1,9 @@
 package com.thl.spring.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 @Data
 @Entity
 @Table(name = "users")
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserEntity implements Serializable {
 
     @Id
@@ -28,6 +32,13 @@ public class UserEntity implements Serializable {
     @CollectionTable(name = "users_roles")
     @Enumerated(EnumType.STRING)
     private Set<Role> role;
+
+
+    public UserEntity(String username, String password, Set<Role> role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
 
     public User toUser() {
         return new User(username, password, getAuthorities());

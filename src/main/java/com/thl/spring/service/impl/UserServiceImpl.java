@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -21,36 +22,32 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void save(UserDto userDto) {
-        Optional<UserEntity> userEntityOptional = userDao.findByUsername(userDto.getUsername());
-        if (userEntityOptional.isPresent()) {
-            log.info("Updating user");
-            userDao.save(updateUser(userEntityOptional.get(), userDto));
-        } else {
-            UserEntity userEntity = toEntity(userDto);
-            log.info("Saving user");
-            userDao.save(userEntity);
-        }
+    public int save(UserDto userDto) {
+        log.info("Saving or updating user");
+        return Objects.requireNonNull(userDao.save(
+                userDao.findIdByUsername(userDto.getUsername()).
+                        map(idOnly -> toUserEntity(idOnly.getId(), userDto)).
+                        orElse(toUserEntity(userDto)))).getId();
     }
+
 
     @Override
     public Optional<UserEntity> findByUsername(String username) {
+        log.info("Finding user by username");
         return userDao.findByUsername(username);
     }
 
-    private UserEntity toEntity(UserDto userDto) {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(userDto.getUsername());
-        userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        userEntity.setRole(userDto.getRole());
-        return userEntity;
+    private UserEntity toUserEntity(int id, UserDto userDto) {
+        return new UserEntity(id,
+                userDto.getUsername(),
+                passwordEncoder.encode(userDto.getPassword()),
+                userDto.getRole());
     }
 
-    private UserEntity updateUser(UserEntity userEntity, UserDto userDto) {
-        userEntity.setRole(userDto.getRole());
-        userEntity.setUsername(userDto.getUsername());
-        userEntity.setPassword(userDto.getPassword());
-        return userEntity;
+    private UserEntity toUserEntity(UserDto userDto) {
+        return new UserEntity(
+                userDto.getUsername(),
+                passwordEncoder.encode(userDto.getPassword()),
+                userDto.getRole());
     }
-
 }

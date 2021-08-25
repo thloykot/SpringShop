@@ -1,7 +1,6 @@
 package com.thl.spring.service.impl;
 
 import com.thl.spring.dao.SneakersDao;
-import com.thl.spring.dto.SneakersDto;
 import com.thl.spring.model.Sneakers;
 import com.thl.spring.service.SneakersService;
 import lombok.RequiredArgsConstructor;
@@ -10,26 +9,26 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
-@Transactional
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class SneakersServiceImpl implements SneakersService {
 
     private final SneakersDao sneakersDao;
 
     @Override
-    public void save(SneakersDto sneakersDto) {
-        Optional<Sneakers> sneakersOptional = find(sneakersDto);
-        if (sneakersOptional.isPresent()) {
-            log.info("Updating sneakers");
-            sneakersDao.save(updateSneakers(sneakersOptional.get(), sneakersDto));
-        } else {
-            log.info("Saving new sneakers");
-            sneakersDao.save(toSneakers(sneakersDto));
-        }
+    public int save(Sneakers sneakers) {
+        log.info("Saving or updating sneakers");
+        return Objects.requireNonNull(sneakersDao.save(
+                sneakersDao.findIdByFirmAndModel(sneakers.getFirm(), sneakers.getModel())
+                        .map(idOnly -> {
+                            sneakers.setId(idOnly.getId());
+                            return sneakers;
+                        }).orElse(sneakers))).getId();
     }
 
     @Override
@@ -47,28 +46,7 @@ public class SneakersServiceImpl implements SneakersService {
 
     @Override
     public boolean delete(int id) {
-        return sneakersDao.deleteSneakersById(id) != 0;
-    }
-
-    private Optional<Sneakers> find(SneakersDto sneakers) {
-        return sneakersDao.findByFirmAndAndSizeAndPrice(
-                sneakers.getFirm(),
-                sneakers.getSize(),
-                sneakers.getPrice());
-    }
-
-    private Sneakers toSneakers(SneakersDto sneakersDto) {
-        Sneakers sneakers = new Sneakers();
-        sneakers.setFirm(sneakersDto.getFirm());
-        sneakers.setPrice(sneakersDto.getPrice());
-        sneakers.setSize(sneakersDto.getSize());
-        return sneakers;
-    }
-
-    private Sneakers updateSneakers(Sneakers sneakers, SneakersDto sneakersDto) {
-        sneakers.setSize(sneakersDto.getSize());
-        sneakers.setFirm(sneakersDto.getFirm());
-        sneakers.setPrice(sneakersDto.getPrice());
-        return sneakers;
+        log.info("Deleting sneakers");
+        return sneakersDao.deleteSneakersById(id) > 0;
     }
 }

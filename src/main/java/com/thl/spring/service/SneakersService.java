@@ -1,6 +1,5 @@
 package com.thl.spring.service;
 
-import com.thl.spring.dto.SneakersDto;
 import com.thl.spring.model.Sneakers;
 
 import java.util.List;
@@ -8,7 +7,8 @@ import java.util.Optional;
 
 public interface SneakersService {
 
-    void save(SneakersDto sneakersDto);
+
+    int save(Sneakers sneakers);
 
     Optional<Sneakers> findById(int id);
 
