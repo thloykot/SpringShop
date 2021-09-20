@@ -1,12 +1,17 @@
 package com.thl.spring.anti_spam_system;
 
 import com.thl.spring.anti_spam_system.service.AntiSpamService;
+import com.thl.spring.model.Role;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Component
@@ -38,6 +43,8 @@ public class AntiSpam {
     }
 
     private void bUser(SecurityContext context) {
-        context.getAuthentication().setAuthenticated(false);
+        Authentication authentication = context.getAuthentication();
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),authentication.getCredentials(),
+                List.of(new SimpleGrantedAuthority(Role.BANNED.name()))));
     }
 }
