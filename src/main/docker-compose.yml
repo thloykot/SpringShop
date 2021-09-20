@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  app:
+    image: 'springshop:latest'
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+    container_name: Springbootapp
+    depends_on:
+      - db
+    environment:
+      - PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME= postgres
+      - SPRING_DATASOURCE_PASSWORD= postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+
+  db:
+    image: 'postgres'
+    container_name: postgres
+    environment:
+      - POSTGRES_USER= postgres
+      - POSTGRES_PASSWORD= postgres

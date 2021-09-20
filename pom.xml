@@ -72,5 +72,6 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>Spring-shop</finalName>
     </build>
 </project>
