@@ -9,6 +9,4 @@ public interface AntiSpamService {
     void save(String username, int counter);
 
     Optional<Integer> find(String username);
-
-    UserEntity blockUser(String username);
 }

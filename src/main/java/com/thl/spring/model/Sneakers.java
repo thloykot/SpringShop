@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table()
+@Table
 @AllArgsConstructor
 @NoArgsConstructor
 public class Sneakers implements Serializable {

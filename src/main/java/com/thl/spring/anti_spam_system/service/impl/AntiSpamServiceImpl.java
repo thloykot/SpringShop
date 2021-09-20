@@ -17,22 +17,14 @@ import java.util.Optional;
 public class AntiSpamServiceImpl implements AntiSpamService {
 
     private final AntiSpamDaoImpl antiSpamDao;
-    private  final UserDao userDao;
 
     @Override
-    public void save(String username,int counter) {
+    public void save(String username, int counter) {
         antiSpamDao.save(username, counter);
     }
 
     @Override
     public Optional<Integer> find(String username) {
         return antiSpamDao.findByUsername(username);
-    }
-
-    public UserEntity blockUser(String username){
-        return userDao.findByUsername(username).map(userEntity -> {
-            userEntity.setRole(Collections.singleton(Role.BANNED));
-            return userDao.save(userEntity);
-        }).orElseThrow(()-> new UsernameNotFoundException("user not found"));
     }
 }
