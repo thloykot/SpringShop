@@ -18,10 +18,11 @@ import java.util.TimerTask;
 @AllArgsConstructor
 @Component
 @Slf4j
-public class AntiSpam {
+public class AntiSpamSystem {
 
     private final AntiSpamService antiSpamService;
     private final int maxDayActivity = 50;
+    private final Timer timer = new Timer();
     private final long delay = 86400000;/*  1000 * 60 * 60 * 24 = 86400000 is 24 hours period */
 
 
@@ -37,9 +38,7 @@ public class AntiSpam {
             } else {
                 antiSpam(securityContext);
             }
-
         }, () ->
-
         {
             throw new UsernameNotFoundException("UserNameNotFound");
         });
@@ -47,7 +46,7 @@ public class AntiSpam {
 
     private void antiSpam(SecurityContext context) {
         lockUserSession(context);
-        allowUserSessionaftertime(context, delay);
+        allowUserSessionAfterTime(context, delay);
     }
 
     private void lockUserSession(SecurityContext context) {
@@ -58,8 +57,14 @@ public class AntiSpam {
     }
 
 
-    private void allowUserSessionaftertime(SecurityContext context, long delay) {
-        TimerTask timerTask = new TimerTask() {
+    private void allowUserSessionAfterTime(SecurityContext context, long delay) {
+        TimerTask timerTask = makeActivityAfterTime(context);
+
+        timer.schedule(timerTask, delay);
+    }
+
+    private TimerTask makeActivityAfterTime(SecurityContext context) {
+        return new TimerTask() {
             @Override
             public void run() {
                 Authentication authentication = context.getAuthentication();
@@ -74,7 +79,5 @@ public class AntiSpam {
                 generateCounter(name);
             }
         };
-        Timer timer = new Timer();
-        timer.schedule(timerTask, delay);
     }
 }

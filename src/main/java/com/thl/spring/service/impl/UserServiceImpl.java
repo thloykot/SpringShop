@@ -1,6 +1,6 @@
 package com.thl.spring.service.impl;
 
-import com.thl.spring.anti_spam_system.AntiSpam;
+import com.thl.spring.anti_spam_system.AntiSpamSystem;
 import com.thl.spring.dao.UserDao;
 import com.thl.spring.dto.UserDto;
 import com.thl.spring.model.UserEntity;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final AntiSpam antiSpam;
+    private final AntiSpamSystem antiSpamSystem;
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
 
@@ -30,11 +30,11 @@ public class UserServiceImpl implements UserService {
         return Objects.requireNonNull(userDao.save(
                 userDao.findIdByUsername(userDto.getUsername()).
                         map(idOnly -> {
-                            antiSpam.userMadeActivity(SecurityContextHolder.getContext());
+                            antiSpamSystem.userMadeActivity(SecurityContextHolder.getContext());
                             return toUserEntity(idOnly.getId(), userDto);
                         }).
                         orElseGet(() -> {
-                            antiSpam.generateCounter(userDto.getUsername());
+                            antiSpamSystem.generateCounter(userDto.getUsername());
                             return toUserEntity(userDto);
                         }))).getId();
     }
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserEntity> findByUsername(String username) {
         log.info("Finding user by username");
-        antiSpam.userMadeActivity(SecurityContextHolder.getContext());
+        antiSpamSystem.userMadeActivity(SecurityContextHolder.getContext());
         return userDao.findByUsername(username);
     }
 
