@@ -1,6 +1,5 @@
 package com.thl.spring.config;
 
-import com.thl.spring.model.Role;
 import com.thl.spring.service.impl.LoginUserServise;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -30,8 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().and()
                 .authorizeRequests()
                 .antMatchers("/", "/register")
-                .anonymous()
-                .anyRequest().hasAnyAuthority(Role.USER.name())
+                .permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .permitAll();

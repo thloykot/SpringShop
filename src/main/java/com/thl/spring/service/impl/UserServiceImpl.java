@@ -1,13 +1,11 @@
 package com.thl.spring.service.impl;
 
-import com.thl.spring.anti_spam_system.AntiSpamSystem;
 import com.thl.spring.dao.UserDao;
 import com.thl.spring.dto.UserDto;
 import com.thl.spring.model.UserEntity;
 import com.thl.spring.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +17,6 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final AntiSpamSystem antiSpamSystem;
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
 
@@ -29,21 +26,13 @@ public class UserServiceImpl implements UserService {
         log.info("Saving or updating user");
         return Objects.requireNonNull(userDao.save(
                 userDao.findIdByUsername(userDto.getUsername()).
-                        map(idOnly -> {
-                            antiSpamSystem.userMadeActivity(SecurityContextHolder.getContext());
-                            return toUserEntity(idOnly.getId(), userDto);
-                        }).
-                        orElseGet(() -> {
-                            antiSpamSystem.generateCounter(userDto.getUsername());
-                            return toUserEntity(userDto);
-                        }))).getId();
+                        map(idOnly -> toUserEntity(idOnly.getId(), userDto)).
+                        orElse(toUserEntity(userDto)))).getId();
     }
-
 
     @Override
     public Optional<UserEntity> findByUsername(String username) {
         log.info("Finding user by username");
-        antiSpamSystem.userMadeActivity(SecurityContextHolder.getContext());
         return userDao.findByUsername(username);
     }
 
@@ -53,6 +42,7 @@ public class UserServiceImpl implements UserService {
                 passwordEncoder.encode(userDto.getPassword()),
                 userDto.getRole());
     }
+    
 
     private UserEntity toUserEntity(UserDto userDto) {
         return new UserEntity(

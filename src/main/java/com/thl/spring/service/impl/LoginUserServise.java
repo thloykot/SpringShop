@@ -1,6 +1,5 @@
 package com.thl.spring.service.impl;
 
-import com.thl.spring.dao.UserDao;
 import com.thl.spring.model.UserEntity;
 import com.thl.spring.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +13,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoginUserServise implements UserDetailsService {
 
-    private final UserDao userDao;
+    private final UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userDao.findByUsername(username).map(UserEntity::toUser).
+        return userService.findByUsername(username).map(UserEntity::toUser).
                 orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-
 }
