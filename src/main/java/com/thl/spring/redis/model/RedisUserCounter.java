@@ -2,19 +2,17 @@ package com.thl.spring.redis.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Setter
 @Getter
-public class RedisUser implements Serializable {
+public class RedisUserCounter implements Serializable {
 
-    private int counter;
-    private Date date;
+    private final int counter;
+    private final ZonedDateTime date;
 
 }

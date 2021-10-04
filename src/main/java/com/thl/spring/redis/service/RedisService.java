@@ -1,15 +1,16 @@
 package com.thl.spring.redis.service;
 
-import com.thl.spring.redis.model.RedisUser;
+import com.thl.spring.redis.model.RedisUserCounter;
 
-import java.util.Date;
 import java.util.Optional;
 
 public interface RedisService {
 
-    void save(String username, RedisUser user);
+    void save(String username, RedisUserCounter user);
 
-    Optional<RedisUser> find(String username);
+    Optional<RedisUserCounter> find(String username);
 
-    Date getUnlockDate(String username);
+    boolean isTimePassed(String username);
+
+    void setUserCounter(String username, int counter);
 }

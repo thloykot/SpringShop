@@ -1,69 +1,67 @@
 package com.thl.spring.redis;
 
-import com.thl.spring.redis.model.RedisUser;
+import com.thl.spring.redis.model.RedisUserCounter;
 import com.thl.spring.redis.service.RedisService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
-@Component
-@AllArgsConstructor
 @Slf4j
-public class SessionFilter implements Filter {
+@Component
+public class SessionFilter extends OncePerRequestFilter {
 
-    private final RedisService redisService;
-    private final int limit = 50;
-
+    private static final int LIMIT = 8;
+    @Autowired
+    private RedisService redisService;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
-        HttpServletRequest req = (HttpServletRequest) request;
-        Optional<Principal> principal = Optional.ofNullable(req.getUserPrincipal());
-
-        principal.ifPresentOrElse(user ->
-                redisService.find(user.getName()).ifPresentOrElse(redisUser -> {
-                    try {
-                        if (new Date().after(redisService.getUnlockDate(user.getName()))) {
-                            setCounterToOne(user.getName());
-                            passUser(request, response, chain);
-                        } else {
-                            int counter = redisUser.getCounter();
-                            if (counter < limit) {
-                                incrementCounter(user.getName(), counter);
-                                passUser(request, response, chain);
-                            }
-                        }
-                    } catch (ServletException | IOException e) {
-                        e.printStackTrace();
-                    }
-                }, () -> setCounterToOne(user.getName())), () -> {
-            try {
-                passUser(request, response, chain);
-            } catch (IOException | ServletException e) {
-                e.printStackTrace();
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        isUserAuthenticated(request);
+        /*String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<RedisUserCounter> OptionalRedisUserCounter = redisService.find(username);
+        if (OptionalRedisUserCounter.isPresent()) {
+            RedisUserCounter redisUserCounter = OptionalRedisUserCounter.get();
+            if (redisService.isTimePassed(username)) {
+                redisService.setUserCounter(username, 1);
+            } else {
+                int userCounter = redisUserCounter.getCounter();
+                if (userCounter < LIMIT) {
+                    userCounter++;
+                    redisService.setUserCounter(username, userCounter);
+                } else {
+                    SecurityContextHolder.clearContext();
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                }
             }
-        });
+        } else {
+            redisService.setUserCounter(username, 1);
+
+        }
+        */
+        filterChain.doFilter(request, response);
     }
 
-    private void passUser(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
-        chain.doFilter(request, response);
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return request.getRequestURI().equals("/register");
     }
 
-    private void setCounterToOne(String username) {
-        log.info("number of {}'s requests has been set to 1", username);
-        redisService.save(username, new RedisUser(1, new Date()));
-    }
-
-    private void incrementCounter(String username, int counter) {
-        int newCounter = counter + 1;
-        log.info("user {} has made request № {}", username, newCounter);
-        redisService.save(username, new RedisUser(newCounter, new Date()));
+    private void isUserAuthenticated(HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        String UserInfo = principal.getName() + ":" + principal.getClass();
     }
 }
