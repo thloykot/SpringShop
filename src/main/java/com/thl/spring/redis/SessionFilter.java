@@ -35,7 +35,7 @@ public class SessionFilter implements Filter {
                             passUser(request, response, chain);
                         } else {
                             int counter = redisUser.getCounter();
-                            if (counter <= limit) {
+                            if (counter < limit) {
                                 incrementCounter(user.getName(), counter);
                                 passUser(request, response, chain);
                             }
@@ -57,7 +57,7 @@ public class SessionFilter implements Filter {
     }
 
     private void setCounterToOne(String username) {
-        log.info("number of {}'s requests has been restarted", username);
+        log.info("number of {}'s requests has been set to 1", username);
         redisService.save(username, new RedisUser(1, new Date()));
     }
 
