@@ -10,7 +10,5 @@ public interface RedisService {
 
     Optional<RedisUserCounter> find(String username);
 
-    boolean isTimePassed(String username);
-
     void setUserCounter(String username, int counter);
 }

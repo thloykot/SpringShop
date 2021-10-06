@@ -9,5 +9,5 @@ public interface RedisDao {
 
     void save(String username, RedisUserCounter user);
 
-    Optional<RedisUserCounter> findByUsername(String Username);
+    Optional<RedisUserCounter> findByUsername(String username);
 }

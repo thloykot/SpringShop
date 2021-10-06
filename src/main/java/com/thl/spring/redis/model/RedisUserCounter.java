@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.sql.Timestamp;
 
 @AllArgsConstructor
 @Setter
@@ -13,6 +13,6 @@ import java.time.ZonedDateTime;
 public class RedisUserCounter implements Serializable {
 
     private final int counter;
-    private final ZonedDateTime date;
+    private final Timestamp date;
 
 }
