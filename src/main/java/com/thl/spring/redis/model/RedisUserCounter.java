@@ -13,6 +13,6 @@ import java.sql.Timestamp;
 public class RedisUserCounter implements Serializable {
 
     private final int counter;
-    private final Timestamp date;
+    private final long date;
 
 }

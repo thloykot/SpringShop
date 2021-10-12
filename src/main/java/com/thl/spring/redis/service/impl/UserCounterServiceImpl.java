@@ -1,24 +1,23 @@
 package com.thl.spring.redis.service.impl;
 
-import com.thl.spring.redis.dao.impl.RedisDaoImpl;
+import com.thl.spring.redis.dao.impl.UserCounterDaoImpl;
 import com.thl.spring.redis.model.RedisUserCounter;
-import com.thl.spring.redis.service.RedisService;
+import com.thl.spring.redis.service.UserCounterService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
 @AllArgsConstructor
 @Service
 @Slf4j
-public class RedisServiceImpl implements RedisService {
+public class UserCounterServiceImpl implements UserCounterService {
 
-    private final RedisDaoImpl redisDao;
-    private final ZoneId zoneId;
+    private final UserCounterDaoImpl redisDao;
+
 
     @Override
     public void save(String username, RedisUserCounter user) {
@@ -31,8 +30,8 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
-    public void setUserCounter(String username, int counter) {
+    public void set(String username, int counter) {
         log.info("user {} has made request № {}", username, counter);
-        redisDao.save(username, new RedisUserCounter(counter, Timestamp.from(ZonedDateTime.now(zoneId).toInstant())));
+        redisDao.save(username, new RedisUserCounter(counter, ZonedDateTime.now(ZoneOffset.UTC).toInstant().toEpochMilli()));
     }
 }

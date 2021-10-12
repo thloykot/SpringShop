@@ -5,7 +5,7 @@ import com.thl.spring.redis.model.RedisUserCounter;
 
 import java.util.Optional;
 
-public interface RedisDao {
+public interface UserCounterDao {
 
     void save(String username, RedisUserCounter user);
 
