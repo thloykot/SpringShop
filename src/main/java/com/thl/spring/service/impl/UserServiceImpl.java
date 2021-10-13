@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
                         orElse(toUserEntity(userDto)))).getId();
     }
 
-
     @Override
     public Optional<UserEntity> findByUsername(String username) {
         log.info("Finding user by username");
@@ -43,6 +42,7 @@ public class UserServiceImpl implements UserService {
                 passwordEncoder.encode(userDto.getPassword()),
                 userDto.getRole());
     }
+    
 
     private UserEntity toUserEntity(UserDto userDto) {
         return new UserEntity(
