@@ -1,7 +1,6 @@
 package com.thl.spring.config;
 
-import com.thl.spring.redis.model.RedisUserCounter;
-import com.thl.spring.redis.model.RedisUserCounter;
+import com.thl.spring.redis.model.UserCounter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -17,8 +16,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, RedisUserCounter> redisTemplate() {
-        RedisTemplate<String, RedisUserCounter> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, UserCounter> redisTemplate() {
+        RedisTemplate<String, UserCounter> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(jedisConnectionFactory());
         return redisTemplate;
     }

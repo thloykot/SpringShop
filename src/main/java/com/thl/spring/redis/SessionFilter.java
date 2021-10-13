@@ -1,6 +1,6 @@
 package com.thl.spring.redis;
 
-import com.thl.spring.redis.model.RedisUserCounter;
+import com.thl.spring.redis.model.UserCounter;
 import com.thl.spring.redis.service.UserCounterService;
 import com.thl.spring.service.UserService;
 import lombok.AllArgsConstructor;
@@ -44,11 +44,6 @@ public class SessionFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getRequestURI().equals("/register");
-    }
-
     private void authenticate(String authorizationHeader) {
         String decodedAuth = new String(Base64.getDecoder().decode(authorizationHeader.replaceAll("Basic ", "")));
         String[] userDetails = decodedAuth.split(":");
@@ -67,9 +62,9 @@ public class SessionFilter extends OncePerRequestFilter {
     }
 
     private boolean isUserCounterNotExceeded(String username) {
-        Optional<RedisUserCounter> redisUserCounterOptional = userCounterService.find(username);
+        Optional<UserCounter> redisUserCounterOptional = userCounterService.find(username);
         if (redisUserCounterOptional.isEmpty() || isTimePassed(Instant
-                .ofEpochMilli(redisUserCounterOptional.map(RedisUserCounter::getDate).get()))) {
+                .ofEpochMilli(redisUserCounterOptional.get().getDate()))) {
             userCounterService.set(username, 1);
         } else {
             int userCounter = redisUserCounterOptional.get().getCounter();

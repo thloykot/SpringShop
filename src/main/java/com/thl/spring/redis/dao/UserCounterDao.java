@@ -1,13 +1,12 @@
 package com.thl.spring.redis.dao;
 
-import com.thl.spring.redis.model.RedisUserCounter;
-import com.thl.spring.redis.model.RedisUserCounter;
+import com.thl.spring.redis.model.UserCounter;
 
 import java.util.Optional;
 
 public interface UserCounterDao {
 
-    void save(String username, RedisUserCounter user);
+    void save(String username, UserCounter userCounter);
 
-    Optional<RedisUserCounter> findByUsername(String username);
+    Optional<UserCounter> findByUsername(String username);
 }

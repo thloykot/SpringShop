@@ -6,9 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-
 @SpringBootApplication
 public class Application {
 
